@@ -1,21 +1,21 @@
 const logErro = require("../utils/logger");
 const { ObjectId } = require("mongodb");
 
-class Usuario {
+class Categoria {
     constructor(db) {
-        this.collection = db.collection("usuarios");
+        this.collection = db.collection("categorias");
     }
 
-    async inserir(usuario) {
+    async inserir(categoria) {
         try {
-            if (!usuario.nome || !usuario.email) {
-                throw new Error("Campos obrigatórios faltando: nome e email");
+            if (!categoria.nome) {
+                throw new Error("Campo obrigatório faltando: nome");
             }
 
-            const resultado = await this.collection.insertOne(usuario);
+            const resultado = await this.collection.insertOne(categoria);
             return resultado.insertedId;
         } catch (erro) {
-            logErro(`Usuario.inserir: ${erro.message}`);
+            logErro(`Categoria.inserir: ${erro.message}`);
             throw erro;
         }
     }
@@ -25,10 +25,10 @@ class Usuario {
             if (!ObjectId.isValid(id)) {
                 throw new Error("ID inválido");
             }
-            const usuario = await this.collection.findOne({ _id: new ObjectId(id) });
-            return usuario;
+            const categoria = await this.collection.findOne({ _id: new ObjectId(id) });
+            return categoria;
         } catch (erro) {
-            logErro(`Usuario.buscarPorId: ${erro.message}`);
+            logErro(`Categoria.buscarPorId: ${erro.message}`);
             throw erro;
         }
     }
@@ -41,10 +41,10 @@ class Usuario {
             const resultado = await this.collection.deleteOne({ _id: new ObjectId(id) });
             return resultado.deletedCount;
         } catch (erro) {
-            logErro(`Usuario.deletar: ${erro.message}`);
+            logErro(`Categoria.deletar: ${erro.message}`);
             throw erro;
         }
     }
 }
 
-module.exports = Usuario;
+module.exports = Categoria;
