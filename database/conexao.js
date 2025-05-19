@@ -5,11 +5,11 @@ const client = new MongoClient(url);
 async function conectar() {
     try {
         await client.connect();
-        console.log("Conectado ao MongoDB");
+        console.log("Conectado ao Servidor Local MongoDB");
         return client.db("agenda");
-    } catch (erro) {
-        console.error("Erro de conexão:", erro);
-        throw erro;
+    } catch (err) {
+        console.error("Erro ao se conectar:", err);
+        throw err;
     }
 }
 
