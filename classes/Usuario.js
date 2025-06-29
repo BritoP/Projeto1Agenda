@@ -45,6 +45,33 @@ class Usuario {
             throw erro;
         }
     }
+
+    /**
+     * Atualiza um documento de usuário pelo seu ID.
+     * @param {string} id - O ID (string) do usuário a ser atualizado.
+     * @param {object} dadosParaAtualizar - Um objeto com os campos e novos valores.
+     * @returns {Promise<number>} O número de documentos modificados (0 ou 1).
+     */
+    async atualizar(id, dadosParaAtualizar) {
+        try {
+            if (!ObjectId.isValid(id)) {
+                throw new Error("ID inválido");
+            }
+            if (Object.keys(dadosParaAtualizar).length === 0) {
+                logErro(`Usuario.atualizar: Tentativa de atualizar usuário com dados vazios para o ID '${id}'.`);
+                return 0;
+            }
+
+            const resultado = await this.collection.updateOne(
+                { _id: new ObjectId(id) },
+                { $set: dadosParaAtualizar }
+            );
+            return resultado.modifiedCount;
+        } catch (erro) {
+            logErro(`Usuario.atualizar: ${erro.message}`);
+            throw erro;
+        }
+    }
 }
 
 module.exports = Usuario;

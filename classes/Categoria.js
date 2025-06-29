@@ -45,6 +45,34 @@ class Categoria {
             throw erro;
         }
     }
+
+    /**
+     * Atualiza um documento de categoria pelo seu ID.
+     * @param {string} id - O ID (string) da categoria a ser atualizada.
+     * @param {object} dadosParaAtualizar - Um objeto com os campos e novos valores.
+     * @returns {Promise<number>} O número de documentos modificados (0 ou 1).
+     */
+    async atualizar(id, dadosParaAtualizar) {
+        try {
+            if (!ObjectId.isValid(id)) {
+                throw new Error("ID inválido");
+            }
+            if (Object.keys(dadosParaAtualizar).length === 0) {
+                // Nenhuma atualização para fazer, pode ser um caso de aviso ou erro
+                logErro(`Categoria.atualizar: Tentativa de atualizar categoria com dados vazios para o ID '${id}'.`);
+                return 0; // Nenhum documento modificado
+            }
+
+            const resultado = await this.collection.updateOne(
+                { _id: new ObjectId(id) },
+                { $set: dadosParaAtualizar }
+            );
+            return resultado.modifiedCount;
+        } catch (erro) {
+            logErro(`Categoria.atualizar: ${erro.message}`);
+            throw erro;
+        }
+    }
 }
 
 module.exports = Categoria;

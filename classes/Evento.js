@@ -45,6 +45,33 @@ class Evento {
             throw erro;
         }
     }
+
+    /**
+     * Atualiza um documento de evento pelo seu ID.
+     * @param {string} id - O ID (string) do evento a ser atualizado.
+     * @param {object} dadosParaAtualizar - Um objeto com os campos e novos valores.
+     * @returns {Promise<number>} O número de documentos modificados (0 ou 1).
+     */
+    async atualizar(id, dadosParaAtualizar) {
+        try {
+            if (!ObjectId.isValid(id)) {
+                throw new Error("ID inválido");
+            }
+            if (Object.keys(dadosParaAtualizar).length === 0) {
+                logErro(`Evento.atualizar: Tentativa de atualizar evento com dados vazios para o ID '${id}'.`);
+                return 0;
+            }
+
+            const resultado = await this.collection.updateOne(
+                { _id: new ObjectId(id) },
+                { $set: dadosParaAtualizar }
+            );
+            return resultado.modifiedCount;
+        } catch (erro) {
+            logErro(`Evento.atualizar: ${erro.message}`);
+            throw erro;
+        }
+    }
 }
 
 module.exports = Evento;
